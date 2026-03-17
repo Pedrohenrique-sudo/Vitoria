@@ -147,9 +147,14 @@
 
         /* Próximo marco / countdown */
         .next-milestone { text-align: center; padding: 15px; background: linear-gradient(135deg, rgba(255,45,85,0.1), rgba(100,0,30,0.2)); border: 1px solid #ff2d55; border-radius: 4px; }
-        .next-milestone-label { font-size: 0.55rem; color: #888; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
-        .next-milestone-value { font-family: 'Orbitron'; font-size: 1.5rem; color: #fff; text-shadow: 0 0 15px #ff2d55; }
-        .next-milestone-desc { font-size: 0.6rem; color: #ff6b8a; margin-top: 5px; }
+        .next-milestone-label { font-size: 0.55rem; color: #888; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
+        .next-milestone-desc { font-size: 0.6rem; color: #ff6b8a; margin-top: 10px; }
+        .countdown-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 10px 0; }
+        @media (max-width: 400px) { .countdown-grid { grid-template-columns: repeat(2, 1fr); } }
+        .countdown-cell { background: rgba(26, 0, 10, 0.8); border: 1px solid #ff2d55; padding: 10px; text-align: center; border-radius: 4px; }
+        .countdown-cell .countdown-num { font-family: 'Orbitron'; font-size: 1.4rem; color: #fff; text-shadow: 0 0 12px #ff2d55; display: block; }
+        .countdown-cell .countdown-unit { font-size: 0.5rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+        .next-milestone-done { font-family: 'Orbitron'; font-size: 1.1rem; color: #00ff41; text-shadow: 0 0 15px #00ff41; padding: 15px 0; }
 
         /* Nossa música / trilha */
         .song-box { display: flex; align-items: center; gap: 15px; padding: 15px; background: rgba(20, 0, 8, 0.8); border: 1px solid #ff2d55; }
@@ -224,9 +229,17 @@
             <section>
                 <h2>PRÓXIMO_MARCO</h2>
                 <div class="next-milestone">
-                    <div class="next-milestone-label">Faltam para 1 ano juntos</div>
-                    <div class="next-milestone-value" id="next-milestone-display">-- dias</div>
-                    <div class="next-milestone-desc">18 de março de 2026 ♡</div>
+                    <div class="next-milestone-label">Contagem regressiva para 1 ano juntos</div>
+                    <div id="countdown-box">
+                        <div class="countdown-grid">
+                            <div class="countdown-cell"><span class="countdown-num" id="cd-days">--</span><span class="countdown-unit">Dias</span></div>
+                            <div class="countdown-cell"><span class="countdown-num" id="cd-hours">--</span><span class="countdown-unit">Horas</span></div>
+                            <div class="countdown-cell"><span class="countdown-num" id="cd-minutes">--</span><span class="countdown-unit">Min</span></div>
+                            <div class="countdown-cell"><span class="countdown-num" id="cd-seconds">--</span><span class="countdown-unit">Seg</span></div>
+                        </div>
+                    </div>
+                    <div id="countdown-done" style="display: none;" class="next-milestone-done">♡ 1 ano juntos! ♡</div>
+                    <div class="next-milestone-desc">18 de março de 2026</div>
                 </div>
             </section>
 
@@ -583,20 +596,34 @@ Eu te amo com cada fibra do meu ser, com cada batida do meu coração. Hoje, ama
 
         // Próximo marco: countdown para 1 ano (18/03/2026)
         const anniversaryOneYear = new Date('2026-03-18T00:00:00');
-        function updateNextMilestone() {
-            const el = document.getElementById('next-milestone-display');
-            if (!el) return;
+        function updateCountdown() {
+            const box = document.getElementById('countdown-box');
+            const done = document.getElementById('countdown-done');
             const now = new Date();
             let diff = anniversaryOneYear - now;
             if (diff <= 0) {
-                el.textContent = '0 dias — já estamos há 1 ano! ♡';
+                if (box) box.style.display = 'none';
+                if (done) { done.style.display = 'block'; done.textContent = '♡ 1 ano juntos! ♡'; }
                 return;
             }
+            if (done) done.style.display = 'none';
+            if (box) box.style.display = 'block';
             const days = Math.floor(diff / 86400000);
-            el.textContent = days + ' dia' + (days !== 1 ? 's' : '');
+            const hours = Math.floor((diff % 86400000) / 3600000);
+            const minutes = Math.floor((diff % 3600000) / 60000);
+            const seconds = Math.floor((diff % 60000) / 1000);
+            const pad = (n) => String(n).padStart(2, '0');
+            const d = document.getElementById('cd-days');
+            const h = document.getElementById('cd-hours');
+            const m = document.getElementById('cd-minutes');
+            const s = document.getElementById('cd-seconds');
+            if (d) d.textContent = days;
+            if (h) h.textContent = pad(hours);
+            if (m) m.textContent = pad(minutes);
+            if (s) s.textContent = pad(seconds);
         }
-        updateNextMilestone();
-        setInterval(updateNextMilestone, 60000);
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
 
         // Frases românticas
         const romanticQuotes = [
