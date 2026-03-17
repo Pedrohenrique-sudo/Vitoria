@@ -105,14 +105,67 @@
         @keyframes main-glitch { 0% { transform: translate(0); } 2% { transform: translate(-2px, 2px); } 4% { transform: translate(2px, -2px); } 100% { transform: translate(0); } }
         @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         @keyframes slideIn { from { transform: translateX(120%); } to { transform: translateX(0); } }
-        
+        @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0.3; } }
+
         .tab-content { display: none; }
         .active-tab { display: block; }
+
+        .stat-card:hover { box-shadow: 0 0 20px rgba(255, 45, 85, 0.4); transform: scale(1.03); transition: 0.2s; }
+        .stat-card { transition: 0.2s; }
+        .achiev-card { transition: 0.2s; cursor: pointer; }
+        .achiev-card:hover { transform: scale(1.08); box-shadow: 0 0 15px rgba(0, 255, 65, 0.4); }
+        .achiev-card:active { transform: scale(0.98); }
+        .section { transition: box-shadow 0.4s; }
+        .section-visible { box-shadow: 0 0 25px rgba(255, 45, 85, 0.2); }
+        #lightbox-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 3000; display: none; justify-content: center; align-items: center; cursor: pointer; }
+        #lightbox-overlay.show { display: flex; }
+        #lightbox-overlay img { max-width: 90%; max-height: 90%; object-fit: contain; border: 2px solid #ff2d55; box-shadow: 0 0 40px rgba(255,45,85,0.5); }
+
+        /* Linha do tempo romântica */
+        .timeline { position: relative; padding-left: 25px; border-left: 2px solid #ff2d55; margin-left: 10px; }
+        .timeline-item { position: relative; padding-bottom: 25px; padding-left: 20px; }
+        .timeline-item::before { content: ''; position: absolute; left: -30px; top: 5px; width: 12px; height: 12px; border-radius: 50%; background: #ff2d55; box-shadow: 0 0 10px #ff2d55; }
+        .timeline-item.revealed::before { animation: pulse-dot 1.5s ease infinite; }
+        .timeline-date { font-size: 0.55rem; color: #888; letter-spacing: 1px; margin-bottom: 3px; }
+        .timeline-title { color: #fff; font-family: 'Orbitron'; font-size: 0.75rem; margin-bottom: 4px; }
+        .timeline-desc { font-size: 0.65rem; color: #cc3366; line-height: 1.4; }
+        @keyframes pulse-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.2); } }
+
+        /* Frases / citações */
+        .quote-box { background: rgba(26, 0, 10, 0.9); border: 1px dashed #ff2d55; padding: 20px; min-height: 80px; position: relative; }
+        .quote-text { font-size: 0.85rem; line-height: 1.6; color: #ffb3c9; font-style: italic; text-align: center; }
+        .quote-nav { display: flex; justify-content: center; gap: 15px; margin-top: 12px; }
+        .quote-btn { background: transparent; border: 1px solid #ff2d55; color: #ff2d55; padding: 6px 14px; font-size: 0.6rem; cursor: pointer; width: auto; }
+        .quote-btn:hover { background: #ff2d55; color: #000; }
+
+        /* Por que te amo - cards */
+        .reasons-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        @media (min-width: 500px) { .reasons-grid { grid-template-columns: repeat(3, 1fr); } }
+        .reason-card { background: rgba(26, 0, 12, 0.9); border: 1px solid #ff2d55; padding: 14px; text-align: center; font-size: 0.65rem; cursor: pointer; transition: 0.3s; min-height: 70px; display: flex; align-items: center; justify-content: center; }
+        .reason-card:hover { box-shadow: 0 0 20px rgba(255, 45, 85, 0.4); transform: scale(1.03); border-color: #ff6b8a; }
+        .reason-card .reason-emoji { font-size: 1.2rem; display: block; margin-bottom: 5px; }
+
+        /* Próximo marco / countdown */
+        .next-milestone { text-align: center; padding: 15px; background: linear-gradient(135deg, rgba(255,45,85,0.1), rgba(100,0,30,0.2)); border: 1px solid #ff2d55; border-radius: 4px; }
+        .next-milestone-label { font-size: 0.55rem; color: #888; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+        .next-milestone-value { font-family: 'Orbitron'; font-size: 1.5rem; color: #fff; text-shadow: 0 0 15px #ff2d55; }
+        .next-milestone-desc { font-size: 0.6rem; color: #ff6b8a; margin-top: 5px; }
+
+        /* Nossa música / trilha */
+        .song-box { display: flex; align-items: center; gap: 15px; padding: 15px; background: rgba(20, 0, 8, 0.8); border: 1px solid #ff2d55; }
+        .song-emoji { font-size: 2rem; }
+        .song-text { font-size: 0.75rem; color: #ffb3c9; line-height: 1.5; }
+
+        /* Corações flutuantes */
+        .hearts-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
+        .float-heart { position: absolute; font-size: 1rem; opacity: 0.15; animation: floatHeart 12s linear infinite; }
+        @keyframes floatHeart { 0% { transform: translateY(100vh) rotate(0deg); opacity: 0; } 10% { opacity: 0.12; } 90% { opacity: 0.08; } 100% { transform: translateY(-50px) rotate(360deg); opacity: 0; } }
     </style>
 </head>
 <body onclick="initAudio()">
 
     <canvas id="matrix"></canvas>
+    <div class="hearts-container" id="hearts-container"></div>
     <div id="notification-area"></div>
 
     <div class="main-content">
@@ -126,6 +179,7 @@
 
         <nav class="system-nav">
             <button onclick="switchTab('core')" class="nav-btn active" id="btn-core">SISTEMA</button>
+            <button onclick="switchTab('momentos')" class="nav-btn" id="btn-momentos">MOMENTOS</button>
             <button onclick="switchTab('recent')" class="nav-btn" id="btn-recent">DATABASE_FOTOS</button>
         </nav>
 
@@ -168,6 +222,23 @@
             </section>
 
             <section>
+                <h2>PRÓXIMO_MARCO</h2>
+                <div class="next-milestone">
+                    <div class="next-milestone-label">Faltam para 1 ano juntos</div>
+                    <div class="next-milestone-value" id="next-milestone-display">-- dias</div>
+                    <div class="next-milestone-desc">18 de março de 2026 ♡</div>
+                </div>
+            </section>
+
+            <section>
+                <h2>NOSSA_TRILHA</h2>
+                <div class="song-box">
+                    <span class="song-emoji">🎵</span>
+                    <p class="song-text">"Luan Santana Chuva de Arroz."</p>
+                </div>
+            </section>
+
+            <section>
                 <h2>TERMINAL_V1.0</h2>
                 <div class="terminal-box">
                     <div class="terminal-output" id="term-out"><p>> Digite 'love'...</p></div>
@@ -195,6 +266,56 @@
             </section>
         </div>
 
+        <div id="momentos" class="tab-content">
+            <section>
+                <h2>LINHA_DO_TEMPO</h2>
+                <div class="timeline" id="timeline">
+                    <div class="timeline-item" data-year="2025">
+                        <div class="timeline-date">18.03.2025</div>
+                        <div class="timeline-title">Início do protocolo</div>
+                        <div class="timeline-desc">Dia em que tudo começou. Conexão estabelecida.</div>
+                    </div>
+                    <div class="timeline-item" data-year="2025">
+                        <div class="timeline-date">—</div>
+                        <div class="timeline-title">Primeiros momentos</div>
+                        <div class="timeline-desc">Risadas, olhares e a certeza de que era diferente.</div>
+                    </div>
+                    <div class="timeline-item" data-year="2025">
+                        <div class="timeline-date">—</div>
+                        <div class="timeline-title">Upgrade confirmado</div>
+                        <div class="timeline-desc">Alianças, promessas e um futuro a dois.</div>
+                    </div>
+                    <div class="timeline-item" data-year="futuro">
+                        <div class="timeline-date">∞</div>
+                        <div class="timeline-title">Próximos capítulos</div>
+                        <div class="timeline-desc">Casa, viagens, vida. Tudo ao seu lado.</div>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <h2>FRASES_QUE_FICAM</h2>
+                <div class="quote-box">
+                    <p class="quote-text" id="quote-text">"Você é o meu sempre."</p>
+                    <div class="quote-nav">
+                        <button type="button" class="quote-btn" onclick="prevQuote()">← Anterior</button>
+                        <button type="button" class="quote-btn" onclick="nextQuote()">Próxima →</button>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <h2>POR_QUE_TE_AMO</h2>
+                <p style="font-size: 0.6rem; color: #888; margin-bottom: 12px;">Clique nos cards para revelar.</p>
+                <div class="reasons-grid" id="reasons-grid">
+                    <div class="reason-card" data-emoji="✨" data-label="Seu sorriso"><span class="reason-emoji">✨</span><span class="reason-label">Seu sorriso</span></div>
+                    <div class="reason-card" data-emoji="💪" data-label="Sua força"><span class="reason-emoji">💪</span><span class="reason-label">Sua força</span></div>
+                    <div class="reason-card" data-emoji="🧠" data-label="Sua inteligência"><span class="reason-emoji">🧠</span><span class="reason-label">Sua inteligência</span></div>
+                    <div class="reason-card" data-emoji="❤️" data-label="Seu coração"><span class="reason-emoji">❤️</span><span class="reason-label">Seu coração</span></div>
+                    <div class="reason-card" data-emoji="🌙" data-label="Nossos silêncios"><span class="reason-emoji">🌙</span><span class="reason-label">Nossos silêncios</span></div>
+                    <div class="reason-card" data-emoji="🎯" data-label="Nossos sonhos"><span class="reason-emoji">🎯</span><span class="reason-label">Nossos sonhos</span></div>
+                </div>
+            </section>
+        </div>
+
         <div id="recent" class="tab-content">
             <section>
                 <h2>GALLERY_DATABASE</h2>
@@ -218,7 +339,7 @@
             </section>
         </div>
 
-        <footer>PEDRO FERREIRA // 2026</footer>
+        <footer style="text-align:center;font-size:0.6rem;color:#666;padding:20px;">PEDRO FERREIRA // 2026 — Feito com ♡ para Vitória</footer>
     </div>
 
     <script>
@@ -284,7 +405,7 @@ Eu te amo com cada fibra do meu ser, com cada batida do meu coração. Hoje, ama
         function createToast() {
             const area = document.getElementById('notification-area');
             const t = document.createElement('div'); t.className = 'toast';
-            const msgs = ["SYNC: Integridade 100%", "SERVER: Pedro s2 Vitória", "ALERTA: Amor Detectado"];
+            const msgs = ["SYNC: Integridade 100%", "SERVER: Pedro s2 Vitória", "ALERTA: Amor Detectado", "Vitória: sistema preferido.", "Conexão estável. ♡", "Heart_Vitoria: online sempre."];
             t.innerText = msgs[Math.floor(Math.random()*msgs.length)];
             area.appendChild(t); playBip(900, 0.03); setTimeout(() => t.remove(), 4000);
         }
@@ -309,9 +430,8 @@ Eu te amo com cada fibra do meu ser, com cada batida do meu coração. Hoje, ama
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(tabId).classList.add('active-tab');
-            if (event && event.currentTarget) {
-                event.currentTarget.classList.add('active');
-            }
+            const btn = document.getElementById('btn-' + tabId);
+            if (btn) btn.classList.add('active');
             playBip(600, 0.05);
         }
 
@@ -328,6 +448,230 @@ Eu te amo com cada fibra do meu ser, com cada batida do meu coração. Hoje, ama
             });
         }
         setInterval(drawMatrix, 50);
+
+        // ---- INTERAÇÕES EXTRAS (site vivo) ----
+
+        // Lightbox: criar overlay via JS (sem alterar HTML)
+        const overlay = document.createElement('div');
+        overlay.id = 'lightbox-overlay';
+        const overlayImg = document.createElement('img');
+        overlay.appendChild(overlayImg);
+        overlay.onclick = () => { overlay.classList.remove('show'); playBip(400, 0.03); };
+        document.body.appendChild(overlay);
+
+        document.querySelectorAll('.photo-container .gallery-img').forEach(img => {
+            img.style.cursor = 'pointer';
+            img.closest('.photo-container').addEventListener('click', (e) => {
+                e.stopPropagation();
+                overlayImg.src = img.src;
+                overlay.classList.add('show');
+                playBip(523, 0.05);
+            });
+        });
+
+        // Sincronia "respirando" (97–100%)
+        let syncPhase = 0;
+        setInterval(() => {
+            const val = 97 + 2.5 + Math.sin(syncPhase) * 1.5;
+            syncPhase += 0.08;
+            const el = document.getElementById('sync-val');
+            const bar = document.getElementById('sync-bar');
+            if (el) el.textContent = Math.round(val) + '%';
+            if (bar) bar.style.width = Math.round(val) + '%';
+        }, 200);
+
+        // Cards de tempo: hover/click
+        document.querySelectorAll('.stat-card').forEach(card => {
+            card.addEventListener('click', () => playBip(550, 0.04));
+        });
+
+        // Achievement cards: clique = bip + toast rápido
+        document.querySelectorAll('.achiev-card.unlocked').forEach(card => {
+            card.addEventListener('click', () => {
+                playBip(660, 0.05);
+                const area = document.getElementById('notification-area');
+                const t = document.createElement('div');
+                t.className = 'toast';
+                t.innerText = 'Conquista verificada.';
+                area.appendChild(t);
+                setTimeout(() => t.remove(), 2000);
+            });
+        });
+
+        // Avatar: clique = mensagem especial
+        const avatar = document.querySelector('.profile-avatar');
+        if (avatar) {
+            avatar.style.cursor = 'pointer';
+            avatar.addEventListener('click', () => {
+                playBip(880, 0.06);
+                const area = document.getElementById('notification-area');
+                const t = document.createElement('div');
+                t.className = 'toast';
+                t.innerText = 'RANK: NAMORADA_PERFEITA ✓';
+                area.appendChild(t);
+                setTimeout(() => t.remove(), 3500);
+            });
+        }
+
+        // Terminal: mensagem de boas-vindas ao carregar (typewriter)
+        (function terminalWelcome() {
+            const out = document.getElementById('term-out');
+            const msg = "> Sistema PEDRO & VITÓRIA online. Digite 'love' para começar.\n";
+            let i = 0;
+            out.innerHTML = '';
+            const id = setInterval(() => {
+                if (i < msg.length) {
+                    out.innerHTML += msg[i];
+                    out.scrollTop = out.scrollHeight;
+                    if (msg[i] !== ' ' && msg[i] !== '\n') playBip(300 + i * 2, 0.02);
+                    i++;
+                } else clearInterval(id);
+            }, 40);
+        })();
+
+        // Seções iluminam ao entrar na tela
+        const sections = document.querySelectorAll('section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('section-visible');
+                else entry.target.classList.remove('section-visible');
+            });
+        }, { threshold: 0.2 });
+        sections.forEach(s => observer.observe(s));
+
+        // Título: glitch forte ao passar o mouse
+        const glitchTitle = document.querySelector('.glitch-title');
+        if (glitchTitle) {
+            glitchTitle.addEventListener('mouseenter', () => {
+                glitchTitle.style.animation = 'none';
+                glitchTitle.offsetHeight;
+                glitchTitle.style.animation = 'main-glitch 0.15s infinite';
+                setTimeout(() => { glitchTitle.style.animation = 'main-glitch 2s infinite'; }, 500);
+            });
+            glitchTitle.addEventListener('dblclick', () => {
+                playBip(988, 0.08);
+                const area = document.getElementById('notification-area');
+                const t = document.createElement('div');
+                t.className = 'toast';
+                t.innerText = '❤ Sistema de Amor Ativado ❤';
+                area.appendChild(t);
+                setTimeout(() => t.remove(), 4000);
+            });
+        }
+
+        // Matrix: opacidade sobe levemente com movimento do mouse
+        let matrixOpacity = 0.2;
+        document.addEventListener('mousemove', () => {
+            matrixOpacity = Math.min(0.35, matrixOpacity + 0.008);
+            if (canvas) canvas.style.opacity = matrixOpacity;
+        });
+        setInterval(() => {
+            matrixOpacity = Math.max(0.2, matrixOpacity - 0.002);
+            if (canvas) canvas.style.opacity = matrixOpacity;
+        }, 100);
+
+        // Link Instagram: hover = bip
+        document.querySelector('.insta-node')?.addEventListener('mouseenter', () => playBip(600, 0.03));
+
+        // Redimensionar canvas ao redimensionar janela
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // ---- CONTEÚDO ROMÂNTICO ----
+
+        // Próximo marco: countdown para 1 ano (18/03/2026)
+        const anniversaryOneYear = new Date('2026-03-18T00:00:00');
+        function updateNextMilestone() {
+            const el = document.getElementById('next-milestone-display');
+            if (!el) return;
+            const now = new Date();
+            let diff = anniversaryOneYear - now;
+            if (diff <= 0) {
+                el.textContent = '0 dias — já estamos há 1 ano! ♡';
+                return;
+            }
+            const days = Math.floor(diff / 86400000);
+            el.textContent = days + ' dia' + (days !== 1 ? 's' : '');
+        }
+        updateNextMilestone();
+        setInterval(updateNextMilestone, 60000);
+
+        // Frases românticas
+        const romanticQuotes = [
+            '"Você é o meu sempre."',
+            '"Com você, cada dia é um capítulo novo do nosso amor."',
+            '"Te amo não só pelo que você é, mas pelo que eu me torno quando estou contigo."',
+            '"Você é a resposta para perguntas que eu nem sabia que tinha."',
+            '"Meu porto seguro tem nome: Vitória."',
+            '"A melhor decisão da minha vida foi te escolher."',
+            '"Contigo, o ordinário vira extraordinário."',
+            '"Eu te amo hoje, amanhã e em todos os versos que ainda vou escrever."',
+            '"Você é a melodia que falta em todo o resto."',
+            '"O nosso amor é o meu sistema operacional favorito."'
+        ];
+        let quoteIndex = 0;
+        function showQuote(i) {
+            const el = document.getElementById('quote-text');
+            if (!el) return;
+            quoteIndex = ((i % romanticQuotes.length) + romanticQuotes.length) % romanticQuotes.length;
+            el.style.opacity = '0';
+            setTimeout(() => {
+                el.textContent = romanticQuotes[quoteIndex];
+                el.style.opacity = '1';
+                el.style.transition = 'opacity 0.3s';
+            }, 150);
+            playBip(520, 0.03);
+        }
+        function nextQuote() { showQuote(quoteIndex + 1); }
+        function prevQuote() { showQuote(quoteIndex - 1); }
+        setInterval(() => { const q = document.getElementById('quote-text'); if (q && document.getElementById('momentos')?.classList.contains('active-tab')) showQuote(quoteIndex + 1); }, 8000);
+
+        // Por que te amo: textos ao clicar
+        const reasonTexts = {
+            'Seu sorriso': 'Ilumina qualquer dia. É a primeira coisa que quero ver de manhã.',
+            'Sua força': 'Você me inspira a ser melhor. Juntos somos invencíveis.',
+            'Sua inteligência': 'Cada conversa contigo me surpreende. Você é única.',
+            'Seu coração': 'Generoso, verdadeiro. É nele que eu me encontro.',
+            'Nossos silêncios': 'Até calados a gente se entende. Isso é raro e precioso.',
+            'Nossos sonhos': 'Construir o futuro ao seu lado é o meu maior objetivo.'
+        };
+        document.querySelectorAll('.reason-card').forEach(card => {
+            const key = card.dataset.label;
+            const emoji = card.dataset.emoji || '❤️';
+            card.addEventListener('click', () => {
+                const txt = reasonTexts[key];
+                if (card.dataset.revealed === '1') {
+                    card.innerHTML = '<span class="reason-emoji">' + emoji + '</span><span class="reason-label">' + key + '</span>';
+                    card.dataset.revealed = '0';
+                } else {
+                    card.innerHTML = '<span class="reason-detail" style="font-size:0.6rem;color:#ffb3c9;line-height:1.4;">' + txt + '</span>';
+                    card.dataset.revealed = '1';
+                }
+                playBip(640, 0.04);
+            });
+        });
+
+        // Timeline: revelar com classe ao entrar na tela
+        const timelineItems = document.querySelectorAll('.timeline-item');
+        const timelineObs = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('revealed'); });
+        }, { threshold: 0.3 });
+        timelineItems.forEach(t => timelineObs.observe(t));
+
+        // Corações flutuantes
+        const heartsContainer = document.getElementById('hearts-container');
+        const heartChars = ['❤️', '💕', '💗', '♥️', '💖'];
+        for (let i = 0; i < 12; i++) {s
+            const h = document.createElement('span');
+            h.className = 'float-heart';
+            h.textContent = heartChars[i % heartChars.length];
+            h.style.left = Math.random() * 100 + '%';
+            h.style.animationDelay = (Math.random() * 12) + 's';
+            h.style.fontSize = (0.8 + Math.random() * 0.8) + 'rem';
+            heartsContainer.appendChild(h);
+        }
     </script>
 </body>
 </html>
