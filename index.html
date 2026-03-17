@@ -165,6 +165,24 @@
         .hearts-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
         .float-heart { position: absolute; font-size: 1rem; opacity: 0.15; animation: floatHeart 12s linear infinite; }
         @keyframes floatHeart { 0% { transform: translateY(100vh) rotate(0deg); opacity: 0; } 10% { opacity: 0.12; } 90% { opacity: 0.08; } 100% { transform: translateY(-50px) rotate(360deg); opacity: 0; } }
+
+        /* Robozinho interativo */
+        #robot-container {
+            position: fixed; bottom: 20px; left: 20px; z-index: 1999; display: none;
+            align-items: flex-end; gap: 8px; max-width: 260px;
+        }
+        #robot-container.visible { display: flex; animation: robotFadeIn 0.4s ease forwards; }
+        @keyframes robotFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        #robot-emoji { font-size: 2.2rem; line-height: 1; }
+        #robot-bubble {
+            background: rgba(21, 0, 8, 0.98); border: 1px solid #ff2d55; border-radius: 8px;
+            padding: 10px 12px; font-size: 0.7rem; color: #ffb3c9; line-height: 1.4;
+            box-shadow: 0 0 15px rgba(255, 45, 85, 0.2); position: relative;
+        }
+        #robot-bubble::before {
+            content: ''; position: absolute; left: -6px; bottom: 12px;
+            border: 6px solid transparent; border-right-color: #ff2d55; border-left: none;
+        }
     </style>
 </head>
 <body onclick="initAudio()">
@@ -172,6 +190,10 @@
     <canvas id="matrix"></canvas>
     <div class="hearts-container" id="hearts-container"></div>
     <div id="notification-area"></div>
+    <div id="robot-container">
+        <div id="robot-bubble" aria-live="polite"></div>
+        <span id="robot-emoji" aria-hidden="true">🤖</span>
+    </div>
 
     <div class="main-content">
         <div class="status-header">
@@ -624,6 +646,35 @@ Eu te amo com cada fibra do meu ser, com cada batida do meu coração. Hoje, ama
         }
         updateCountdown();
         setInterval(updateCountdown, 1000);
+
+        // Robozinho interativo: aparece após 3s, balão com typewriter e bips
+        (function initRobot() {
+            var robotContainer = document.getElementById('robot-container');
+            var robotBubble = document.getElementById('robot-bubble');
+            if (!robotContainer || !robotBubble) return;
+            var now = new Date();
+            var day = now.getDate();
+            var month = now.getMonth();
+            var msg = (month === 2 && day === 18)
+                ? 'ALERTA: 1 ano de conexão estável detectado! Eu amo você. ❤️'
+                : (month === 2 && (day === 16 || day === 17))
+                    ? 'Olá ! Monitorando sistema... Grande atualização em breve.'
+                    : 'Olá ! Monitorando sistema... Grande atualização em breve.';
+            setTimeout(function() {
+                robotContainer.classList.add('visible');
+                var i = 0;
+                robotBubble.textContent = '';
+                function typeChar() {
+                    if (i < msg.length) {
+                        robotBubble.textContent += msg[i];
+                        if (msg[i] !== ' ' && msg[i] !== '\n') playBip(400 + (i % 3) * 80, 0.02);
+                        i++;
+                        setTimeout(typeChar, 50);
+                    }
+                }
+                setTimeout(typeChar, 200);
+            }, 3000);
+        })();
 
         // Frases românticas
         const romanticQuotes = [
