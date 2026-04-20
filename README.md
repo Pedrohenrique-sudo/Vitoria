@@ -34,7 +34,7 @@ Para este projeto, utilizei o trio fundamental do desenvolvimento Web, aplicando
 
 ## 🛠️ Como visualizar
 Você pode visualizar o projeto online através do link abaixo:
-> 🔗 **[Clique aqui para ver o site em produção](SEU_LINK_DO_GITHUB_PAGES_AQUI)**
+> 🔗 **[Clique aqui para ver o site em produção]( https://pedrohenrique-sudo.github.io/Vitoria/ )**
 
 ---
 
