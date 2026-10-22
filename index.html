@@ -13,12 +13,6 @@
 :root{
   --bg-1:#0a0620;
   --bg-2:#140a35;
-  --clay-base:rgba(58, 43, 122, 0.55);
-  --clay-base-2:rgba(36, 26, 82, 0.65);
-  --clay-light:rgba(255, 255, 255, 0.12);
-  --clay-light-2:rgba(255, 255, 255, 0.22);
-  --glass-tint:rgba(255, 255, 255, 0.05);
-  --glass-tint-2:rgba(255, 255, 255, 0.09);
   --text:#fff5fb;
   --muted:#d8c9f5;
   --accent:#ff7eb6;
@@ -29,28 +23,6 @@
   --radius:28px;
   --radius-sm:20px;
   --blur-strong:blur(28px) saturate(180%);
-  --blur-med:blur(18px);
-  --blur-soft:blur(12px);
-
-  --clay-glass:
-    10px 10px 26px rgba(0,0,0,0.55),
-    -8px -8px 22px rgba(255,255,255,0.06),
-    inset -4px -4px 12px rgba(0,0,0,0.3),
-    inset 5px 5px 14px rgba(255,255,255,0.22);
-  --clay-glass-hover:
-    14px 14px 34px rgba(0,0,0,0.6),
-    0 0 50px rgba(255,126,182,0.28),
-    -8px -8px 22px rgba(125,211,252,0.14),
-    inset -4px -4px 12px rgba(0,0,0,0.3),
-    inset 6px 6px 16px rgba(255,255,255,0.28);
-  --clay-glass-pressed:
-    inset 8px 8px 20px rgba(0,0,0,0.55),
-    inset -6px -6px 16px rgba(255,255,255,0.1);
-  --clay-small:
-    6px 6px 16px rgba(0,0,0,0.5),
-    -4px -4px 12px rgba(255,255,255,0.05),
-    inset -3px -3px 9px rgba(0,0,0,0.3),
-    inset 4px 4px 10px rgba(255,255,255,0.2);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{
@@ -260,11 +232,11 @@ html,body{
 
 #main-wrapper{opacity:0;transition:opacity 2.2s ease}
 #main-wrapper.revealed{opacity:1}
-#webgl-bg,#matrix{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;opacity:0;transition:opacity 2s ease;will-change:opacity}
+#webgl-bg,#matrix{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;opacity:0;transition:opacity 2s ease}
 #webgl-bg.revealed,#matrix.revealed{opacity:1}
 .hearts-container{position:fixed;inset:0;pointer-events:none;z-index:2;overflow:hidden;opacity:0;transition:opacity 2s ease}
 .hearts-container.revealed{opacity:1}
-.float-heart{position:absolute;opacity:0;animation:floatHeart linear infinite;will-change:transform,opacity;filter:drop-shadow(0 6px 12px rgba(255,126,182,0.6))}
+.float-heart{position:absolute;opacity:0;animation:floatHeart linear infinite;will-change:transform}
 .hearts-container.revealed .float-heart{opacity:0.28}
 @keyframes floatHeart{
   0%{transform:translateY(100vh) rotate(0deg);opacity:0}
@@ -383,7 +355,6 @@ html,body{
   position:relative;overflow:hidden;
   transition: transform 0.5s cubic-bezier(.34,1.56,.64,1);
   animation: heroFloat 8s ease-in-out infinite;
-  will-change: transform;
 }
 @keyframes heroFloat{
   0%,100%{transform:translateY(0)}
@@ -515,7 +486,7 @@ html,body{
   display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
   margin-bottom:26px;position:sticky;top:74px;z-index:20;
   padding:12px 14px;border-radius:24px;
-  background: linear-gradient(145deg, rgba(58,43,122,0.5), rgba(20,10,53,0.4));
+  background: linear-gradient(145deg, rgba(58,43,122,0.85), rgba(20,10,53,0.85));
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   border:1px solid rgba(255,255,255,0.1);
@@ -1050,7 +1021,6 @@ button:active{
   position:relative;margin-left:14px;
   border-left:6px solid rgba(74,54,128,0.7);
   padding-left:28px;border-radius:6px;
-  filter: drop-shadow(4px 4px 8px rgba(0,0,0,0.5));
 }
 .timeline-item{
   position:relative;padding:18px 22px 22px 26px;margin-bottom:18px;
@@ -1471,46 +1441,232 @@ footer span{
 }
 
 /* ============================
-   RESPONSIVO OTIMIZADO MOBILE
+   🔥 OTIMIZAÇÃO MOBILE DE SCROLL
+   O SEGREDO: matar backdrop-filter e background-fixed
 ============================ */
-@media(max-width:600px){
-  :root{
-    --blur-strong: blur(10px);
-    --blur-med: blur(8px);
-    --blur-soft: blur(6px);
+@media(max-width:900px){
+  /* 🔥 #1 CAUSA DO TRAVAMENTO: background-attachment fixed
+     no mobile força repaint do gradiente inteiro a cada frame de scroll */
+  html,body{
+    background-attachment: scroll !important;
   }
+
+  /* 🔥 #2 CAUSA: backdrop-filter em elementos FIXOS/STICKY
+     (.top-nav, .system-nav, .hero-card, .status-header etc.)
+     Ao rolar, o navegador recalcula o blur do conteúdo por baixo
+     a cada frame — isso é o que trava TUDO */
+  .top-nav,
+  .system-nav,
+  .nav-links a,
+  .nav-btn,
+  .brand,
+  .hero-card,
+  .status-header,
+  .subtitle,
+  .candle-entry,
+  .overlay-title,
+  .overlay-sub,
+  .scroll-indicator,
+  .toast,
+  .lightbox-overlay{
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Compensar o "vidro" perdido com fundo mais sólido (mesma cor, mais opaco) */
+  .top-nav{
+    background: linear-gradient(145deg, rgba(58,43,122,0.92), rgba(20,10,53,0.92)) !important;
+  }
+  .system-nav{
+    background: linear-gradient(145deg, rgba(58,43,122,0.94), rgba(20,10,53,0.94)) !important;
+  }
+  .brand{
+    background: linear-gradient(145deg, rgba(58,43,122,0.92), rgba(36,26,82,0.92)) !important;
+  }
+  .nav-links a,
+  .nav-btn{
+    background: linear-gradient(145deg, rgba(58,43,122,0.85), rgba(36,26,82,0.85)) !important;
+  }
+  .hero-card{
+    background: linear-gradient(145deg, rgba(58,43,122,0.85), rgba(20,10,53,0.85)) !important;
+    animation:none !important;
+  }
+  .hero-card::before,.hero-card::after{
+    animation:none !important;
+    filter:blur(20px) !important;
+  }
+  .status-header,
+  .subtitle{
+    background: rgba(0,0,0,0.45) !important;
+  }
+  .candle-entry{
+    background: linear-gradient(145deg, rgba(58,43,122,0.85), rgba(20,10,53,0.85)) !important;
+  }
+  .overlay-title{
+    background: linear-gradient(145deg, rgba(58,43,122,0.9), rgba(20,10,53,0.9)) !important;
+    animation:none !important;
+  }
+  .overlay-sub{
+    background: rgba(0,0,0,0.55) !important;
+  }
+  .scroll-indicator{
+    background: linear-gradient(145deg, rgba(58,43,122,0.92), rgba(20,10,53,0.92)) !important;
+  }
+  .toast{
+    background: linear-gradient(145deg, rgba(58,43,122,0.92), rgba(20,10,53,0.92)) !important;
+  }
+  .lightbox-overlay{
+    background: rgba(15,10,38,0.94) !important;
+  }
+
+  /* 🔥 #3 CAUSA: backdrop-filter em <section> — mesmo "contain: layout paint"
+     não ajuda porque o fundo do body muda durante scroll e o blur recalcula */
+  section{
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: linear-gradient(145deg, rgba(58,43,122,0.78), rgba(20,10,53,0.78)) !important;
+  }
+  section:hover{transform:none !important}
+
+  /* 🔥 #4: elementos internos com backdrop-filter */
+  h2,
+  .stat-card,
+  .id-card,
+  .achiev-card,
+  .sync-container,
+  .countdown-box,
+  .countdown-cell,
+  .song-box,
+  .terminal-box,
+  .nmap-terminal,
+  .terminal-input-line,
+  #hint,
+  #target-text,
+  button,
+  .level-btn,
+  .photo-container,
+  .game-stats,
+  .puzzle-container,
+  .game-victory,
+  .timeline-item,
+  .quote-box,
+  .reason-card{
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Compensar com fundos sólidos (mantendo a paleta) */
+  .stat-card{
+    background: linear-gradient(145deg, rgba(58,43,122,0.85), rgba(36,26,82,0.8)) !important;
+  }
+  .id-card{
+    background: linear-gradient(145deg, rgba(58,43,122,0.8), rgba(36,26,82,0.75)) !important;
+  }
+  .achiev-card{
+    background: linear-gradient(145deg, rgba(58,43,122,0.85), rgba(36,26,82,0.8)) !important;
+  }
+  .achiev-card.unlocked{
+    background: linear-gradient(145deg, rgba(42,90,74,0.85), rgba(26,64,53,0.8)) !important;
+  }
+  .countdown-box{
+    background: linear-gradient(145deg, rgba(58,43,122,0.85), rgba(36,26,82,0.8)) !important;
+  }
+  .countdown-box.completed{
+    background: linear-gradient(145deg, rgba(42,90,74,0.85), rgba(26,64,53,0.8)) !important;
+  }
+  .countdown-box.future{
+    background: linear-gradient(145deg, rgba(90,74,42,0.85), rgba(64,53,26,0.8)) !important;
+  }
+  .countdown-cell{
+    background: rgba(0,0,0,0.55) !important;
+  }
+  .song-box{
+    background: linear-gradient(145deg, rgba(58,43,122,0.85), rgba(36,26,82,0.8)) !important;
+  }
+  .terminal-box,.nmap-terminal{
+    background: linear-gradient(145deg, rgba(26,16,53,0.95), rgba(15,10,38,0.95)) !important;
+  }
+  .terminal-input-line{
+    background: rgba(0,0,0,0.6) !important;
+  }
+  #hint,#target-text{
+    background: rgba(0,0,0,0.5) !important;
+  }
+  button,.level-btn{
+    background: linear-gradient(145deg, rgba(58,43,122,0.85), rgba(36,26,82,0.8)) !important;
+  }
+  .level-btn.active{
+    background: linear-gradient(145deg,#ff7eb6,#c084fc) !important;
+  }
+  .photo-container{
+    background: linear-gradient(145deg, rgba(58,43,122,0.9), rgba(36,26,82,0.85)) !important;
+  }
+  .game-stats{
+    background: linear-gradient(145deg, rgba(58,43,122,0.85), rgba(36,26,82,0.8)) !important;
+  }
+  .puzzle-container{
+    background: linear-gradient(145deg, rgba(26,16,53,0.95), rgba(15,10,38,0.95)) !important;
+  }
+  .game-victory{
+    background: linear-gradient(145deg, rgba(42,90,74,0.9), rgba(26,64,53,0.85)) !important;
+  }
+  .timeline-item{
+    background: linear-gradient(145deg, rgba(58,43,122,0.85), rgba(36,26,82,0.8)) !important;
+  }
+  .quote-box{
+    background: linear-gradient(145deg, rgba(58,43,122,0.85), rgba(36,26,82,0.8)) !important;
+  }
+  .reason-card{
+    background: linear-gradient(145deg, rgba(58,43,122,0.85), rgba(36,26,82,0.8)) !important;
+  }
+
+  /* 🔥 #5: parar animações infinitas que repintam durante scroll */
+  #scroll-progress{animation:none !important;background:linear-gradient(90deg,#ff7eb6,#c084fc) !important}
+  #sync-bar{animation:none !important;background:linear-gradient(90deg,#ff7eb6,#c084fc,#7dd3fc) !important}
+  .hero h1{animation:none !important}
+  h2::before{animation:none !important}
+  .profile-avatar{animation:none !important}
+  .song-emoji{animation:none !important;filter:none !important}
+  .reason-emoji{filter:none !important}
+  .timeline-item.revealed::before{animation:none !important}
+  .float-heart{filter:none !important;will-change:auto !important}
+  .hearts-container.revealed .float-heart{opacity:0.2 !important}
+  .game-victory.show{animation:none !important}
+
+  /* 🔥 #6: desativar canvas de fundo animado no mobile
+     (WebGL + matrix = 2 loops de render contínuos que disputam
+     a GPU com o scroll) */
+  #webgl-bg,#matrix{display:none !important}
+
+  /* 🔥 #7: acelerar compositing dos poucos elementos que ainda animam */
+  .float-heart{transform:translateZ(0)}
+}
+
+/* Ajustes finos mobile */
+@media(max-width:600px){
   .top-nav{
     padding:12px 14px;
     padding-top:max(12px, env(safe-area-inset-top));
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
   }
   .top-nav-inner{flex-direction:column;gap:10px}
   .brand{
     font-size:0.68rem;padding:10px 16px;
     letter-spacing:2px;text-align:center;width:100%;
-    backdrop-filter:none;-webkit-backdrop-filter:none;
   }
-  .nav-links{
-    width:100%;justify-content:center;gap:8px;
-  }
+  .nav-links{width:100%;justify-content:center;gap:8px}
   .nav-links a{
     padding:10px 14px;font-size:0.62rem;
     min-height:44px;display:inline-flex;align-items:center;
-    backdrop-filter:none;-webkit-backdrop-filter:none;
   }
   .system-nav{
     top:8px;position:sticky;
     gap:8px;padding:10px 12px;
     margin-bottom:20px;
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
   }
   .nav-btn{
     font-size:0.55rem;padding:10px 12px;
     flex:1 1 auto;min-width:calc(50% - 4px);
     letter-spacing:1px;
-    backdrop-filter:none;-webkit-backdrop-filter:none;
   }
   .hero{
     min-height:70vh;
@@ -1520,7 +1676,6 @@ footer span{
     font-size:clamp(1.15rem,7vw,1.8rem);
     letter-spacing:3px;
     line-height:1.25;
-    animation:none;
     text-shadow:
       0 3px 0 #b84266,
       0 6px 12px rgba(255,126,182,0.7);
@@ -1529,228 +1684,97 @@ footer span{
   .status-header{
     font-size:0.52rem;padding:10px 12px;
     letter-spacing:1px;gap:6px;
-    backdrop-filter:none;-webkit-backdrop-filter:none;
   }
-  .hero-card{
-    padding:24px 18px;border-radius:28px;
-    animation:none;
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    will-change:auto;
-  }
-  .hero-card::before,.hero-card::after{
-    animation:none;
-    filter:blur(20px);
-  }
+  .hero-card{padding:24px 18px;border-radius:28px}
   .scroll-indicator{display:none}
-
   .main-content{padding:10px 10px 50px}
-
   section{
     padding:16px!important;
     border-radius:22px;
   }
-  section:hover{transform:none}
-
   h2{
     font-size:0.68rem;
     letter-spacing:1.5px;
     padding:10px 14px;
     gap:8px;
-    backdrop-filter:none;-webkit-backdrop-filter:none;
   }
-  h2::before{animation:none}
-
   .grid-shell{gap:14px}
   .grid-shell.two-col{grid-template-columns:1fr}
-
-  .stats-grid{
-    grid-template-columns:repeat(2,1fr);
-    gap:10px;
-  }
-  .stat-card{
-    min-height:82px;padding:14px 8px;
-    backdrop-filter:none;-webkit-backdrop-filter:none;
-  }
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .stat-card{min-height:82px;padding:14px 8px}
   .stat-value{font-size:1.15rem}
   .stat-card span:last-child{font-size:0.55rem;letter-spacing:1.5px}
-
-  .id-card{
-    flex-direction:column;text-align:center;
-    gap:14px;padding:18px;
-    backdrop-filter:none;-webkit-backdrop-filter:none;
-  }
-  .profile-avatar{
-    width:64px;height:64px;
-    animation:none;
-    box-shadow:0 0 20px rgba(255,126,182,0.7);
-  }
-
-  .achievements-grid{
-    grid-template-columns:repeat(2,1fr);
-    gap:10px;
-  }
-  .achiev-card{
-    padding:14px 8px;font-size:0.65rem;
-    min-height:60px;
-    backdrop-filter:none;-webkit-backdrop-filter:none;
-  }
-
-  .sync-container{backdrop-filter:none;-webkit-backdrop-filter:none}
-
+  .id-card{flex-direction:column;text-align:center;gap:14px;padding:18px}
+  .profile-avatar{width:64px;height:64px}
+  .achievements-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .achiev-card{padding:14px 8px;font-size:0.65rem;min-height:60px}
   .countdown-dual{grid-template-columns:1fr;gap:14px}
-  .countdown-box{
-    padding:16px;
-    backdrop-filter:none;-webkit-backdrop-filter:none;
-  }
+  .countdown-box{padding:16px}
   .countdown-grid{gap:6px}
-  .countdown-cell{
-    padding:8px 4px;
-    backdrop-filter:none;-webkit-backdrop-filter:none;
-  }
+  .countdown-cell{padding:8px 4px}
   .countdown-cell .countdown-num{font-size:0.85rem}
   .countdown-cell .countdown-unit{font-size:0.45rem;letter-spacing:1px}
   .countdown-label{font-size:0.6rem;letter-spacing:2px}
   .countdown-done-text{font-size:1rem}
-
-  .song-box{
-    padding:16px;gap:14px;
-    backdrop-filter:none;-webkit-backdrop-filter:none;
-  }
-  .song-emoji{font-size:1.6rem;animation:none;filter:none}
+  .song-box{padding:16px;gap:14px}
+  .song-emoji{font-size:1.6rem}
   .song-text{font-size:0.78rem}
-
-  .terminal-box,.nmap-terminal{
-    padding:14px;
-    backdrop-filter:none;-webkit-backdrop-filter:none;
-  }
+  .terminal-box,.nmap-terminal{padding:14px}
   .terminal-output{height:100px;font-size:0.75rem}
   .terminal-input-line{padding:8px 12px}
   .terminal-input-line input{font-size:16px}
   .nmap-terminal{font-size:0.72rem;min-height:120px}
-
-  #target-text{font-size:0.72rem;padding:12px;line-height:1.65;backdrop-filter:none;-webkit-backdrop-filter:none}
-  #hint{backdrop-filter:none;-webkit-backdrop-filter:none}
-
-  button{
-    padding:14px 16px;font-size:0.6rem;
-    min-height:48px;
-    backdrop-filter:none;-webkit-backdrop-filter:none;
-  }
-
-  .insta-node{
-    padding:14px 22px;font-size:0.72rem;
-    width:100%;justify-content:center;
-  }
-
-  .timeline{margin-left:8px;padding-left:20px;border-left-width:4px;filter:none}
-  .timeline-item{
-    padding:14px 16px 18px 18px;
-    backdrop-filter:none;-webkit-backdrop-filter:none;
-  }
-  .timeline-item::before{
-    left:-32px;width:18px;height:18px;
-    box-shadow:
-      0 0 12px rgba(255,126,182,1),
-      inset -2px -2px 6px rgba(0,0,0,0.35),
-      inset 3px 3px 6px rgba(255,255,255,0.55);
-  }
+  #target-text{font-size:0.72rem;padding:12px;line-height:1.65}
+  button{padding:14px 16px;font-size:0.6rem;min-height:48px}
+  .insta-node{padding:14px 22px;font-size:0.72rem;width:100%;justify-content:center}
+  .timeline{margin-left:8px;padding-left:20px;border-left-width:4px}
+  .timeline-item{padding:14px 16px 18px 18px}
+  .timeline-item::before{left:-32px;width:18px;height:18px}
   .timeline-title{font-size:0.72rem}
   .timeline-desc{font-size:0.7rem}
   .timeline-date{font-size:0.6rem}
-
-  .quote-box{
-    padding:24px 18px;
-    backdrop-filter:none;-webkit-backdrop-filter:none;
-  }
+  .quote-box{padding:24px 18px}
   .quote-box::before{font-size:3.5rem;left:12px}
   .quote-text{font-size:0.9rem;padding:0 8px;min-height:70px}
   .quote-btn{padding:10px 18px;font-size:0.55rem;min-width:48px}
-
   .reasons-grid{grid-template-columns:repeat(2,1fr);gap:10px}
-  .reason-card{
-    min-height:100px;padding:14px 10px;font-size:0.7rem;
-    backdrop-filter:none;-webkit-backdrop-filter:none;
-  }
-  .reason-emoji{font-size:1.4rem;filter:none}
-
+  .reason-card{min-height:100px;padding:14px 10px;font-size:0.7rem}
+  .reason-emoji{font-size:1.4rem}
   .grid{gap:10px}
-  .photo-container{
-    max-height:none;aspect-ratio:1/1;
-    backdrop-filter:none;-webkit-backdrop-filter:none;
-  }
-  .photo-container .play-btn{
-    padding:9px 16px;font-size:0.55rem;
-    bottom:12px;
-  }
-
+  .photo-container{max-height:none;aspect-ratio:1/1}
+  .photo-container .play-btn{padding:9px 16px;font-size:0.55rem;bottom:12px}
   .game-container{gap:16px;padding:4px}
-  .game-stats{
-    padding:14px 16px;gap:10px;
-    backdrop-filter:none;-webkit-backdrop-filter:none;
-  }
+  .game-stats{padding:14px 16px;gap:10px}
   .stat-item{min-width:60px}
   .stat-item .stat-value{font-size:0.85rem}
   .stat-item .stat-label{font-size:0.5rem}
   .game-levels{gap:8px}
-  .level-btn{
-    padding:10px 14px;font-size:0.55rem;flex:1 1 auto;
-    backdrop-filter:none;-webkit-backdrop-filter:none;
-  }
+  .level-btn{padding:10px 14px;font-size:0.55rem;flex:1 1 auto}
   .game-controls{gap:10px}
   .game-controls .game-btn{padding:12px 18px;font-size:0.55rem;flex:1 1 auto}
   .puzzle-container{
     max-width:min(94vw,420px);
     max-height:min(94vw,420px);
     padding:6px;gap:4px;
-    backdrop-filter:none;-webkit-backdrop-filter:none;
   }
   .game-actions{gap:10px}
   .game-actions button{padding:12px 18px;font-size:0.55rem;flex:1 1 auto}
-  .game-victory{
-    padding:20px;max-width:100%;
-    backdrop-filter:none;-webkit-backdrop-filter:none;
-  }
-
+  .game-victory{padding:20px;max-width:100%}
   #notification-area{
     right:12px;left:12px;width:auto;
     bottom:max(12px, env(safe-area-inset-bottom));
   }
-  .toast{
-    padding:14px 18px;font-size:0.72rem;
-    backdrop-filter:none;-webkit-backdrop-filter:none;
-  }
-
-  #lightbox-overlay{
-    padding:14px;
-    backdrop-filter:blur(8px);
-    -webkit-backdrop-filter:blur(8px);
-  }
+  .toast{padding:14px 18px;font-size:0.72rem}
+  #lightbox-overlay{padding:14px}
   #lightbox-overlay img{border-radius:20px;border-width:4px}
-
   footer{
     font-size:0.7rem;padding:28px 16px;
     padding-bottom:max(28px, env(safe-area-inset-bottom));
   }
-
-  .overlay-title{
-    font-size:0.7rem;letter-spacing:5px;
-    padding:14px 20px;
-    animation:none;
-    backdrop-filter:none;-webkit-backdrop-filter:none;
-  }
-  .overlay-sub{
-    font-size:0.65rem;padding:10px 16px;
-    backdrop-filter:none;-webkit-backdrop-filter:none;
-  }
-  .candle-entry{
-    padding:26px;
-    backdrop-filter:none;-webkit-backdrop-filter:none;
-  }
+  .overlay-title{font-size:0.7rem;letter-spacing:5px;padding:14px 20px}
+  .overlay-sub{font-size:0.65rem;padding:10px 16px}
+  .candle-entry{padding:26px}
   .hero-video{opacity:0.15}
-
-  .float-heart{filter:none}
-  .hearts-container.revealed .float-heart{opacity:0.2}
 }
 
 @media(max-width:400px){
@@ -1758,22 +1782,18 @@ footer span{
   .nav-btn{font-size:0.5rem;padding:9px 10px}
   .nav-links a{font-size:0.58rem;padding:9px 12px}
   .stat-value{font-size:1rem}
-  .photo-container{max-height:none}
   .countdown-cell .countdown-num{font-size:0.78rem}
-  .terminal-input-line input{font-size:16px}
   .achiev-card{font-size:0.6rem}
   .reason-card{font-size:0.65rem}
 }
 
-/* Landscape mobile */
 @media(max-height:500px) and (orientation:landscape){
   .hero{min-height:100vh;padding-top:120px}
-  .hero-card{padding:20px;animation:none}
+  .hero-card{padding:20px}
   .puzzle-container{max-width:min(60vh,400px);max-height:min(60vh,400px)}
   .countdown-grid{grid-template-columns:repeat(4,1fr)}
 }
 
-/* Acessibilidade: reduce motion */
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{
     animation-duration:0.01ms!important;
@@ -1782,13 +1802,6 @@ footer span{
     scroll-behavior:auto!important;
   }
   #matrix,#webgl-bg{display:none}
-}
-
-/* iPad / tablets */
-@media(min-width:601px) and (max-width:900px){
-  .system-nav{top:8px;position:sticky}
-  .hero{padding-top:130px}
-  .puzzle-container{max-width:min(85vw,440px);max-height:min(85vw,440px)}
 }
 </style>
 </head>
@@ -2040,7 +2053,7 @@ let timerInterval = null, seconds = 0, isGameComplete = false;
 let audioCtx = null, isRevealed = false;
 let decryptRunning = false;
 
-const isMobileDevice = /Android|iPhone|iPad|iPod|Mobile|Opera Mini|IEMobile/i.test(navigator.userAgent) || window.matchMedia('(max-width:600px)').matches;
+const isMobileDevice = /Android|iPhone|iPad|iPod|Mobile|Opera Mini|IEMobile/i.test(navigator.userAgent) || window.matchMedia('(max-width:900px)').matches;
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 function initAudio(){ if(!audioCtx){ try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } }
@@ -2105,7 +2118,7 @@ function createParticles(){
   const container = document.getElementById('particles-container');
   if(!container) return;
   const colors = ['#ff9a3c','#ffd93d','#ff6b8a','#ff7eb6','#c084fc','#ffffff'];
-  const count = isMobileDevice ? 35 : 70;
+  const count = isMobileDevice ? 30 : 70;
   for(let i=0;i<count;i++){
     const p = document.createElement('div');
     p.className='particle';
@@ -2159,7 +2172,7 @@ window.addEventListener('scroll',()=>{
   scrollT = setTimeout(()=>{
     if(isRevealed){ revealSections(); revealTimeline(); updateNavSticky(); }
     scrollT = null;
-  },80);
+  },100);
 },{passive:true});
 
 // Só roda o parallax em dispositivos com mouse fino (desktop)
@@ -2295,7 +2308,7 @@ setInterval(()=>{
   const bar = document.getElementById("sync-bar");
   if(el) el.textContent = Math.round(val)+"%";
   if(bar) bar.style.width = Math.round(val)+"%";
-},isMobileDevice ? 500 : 220);
+},isMobileDevice ? 800 : 220);
 
 (function(){
   const out = document.getElementById("term-out");
@@ -2364,7 +2377,7 @@ document.querySelectorAll(".gallery-img").forEach(img=>{
 const heartsContainer = document.getElementById("hearts-container");
 if(heartsContainer){
   const heartChars = ["❤️","💕","💗","♥️","💖"];
-  const heartCount = isMobileDevice ? 8 : 15;
+  const heartCount = isMobileDevice ? 6 : 15;
   for(let i=0;i<heartCount;i++){
     const h = document.createElement("span");
     h.className = "float-heart";
@@ -2380,10 +2393,11 @@ if(heartsContainer){
 const avatar = document.querySelector(".profile-avatar");
 if(avatar) avatar.addEventListener("click",()=>createToast("RANK: NAMORADA_PERFEITA ✓"));
 
-/* MATRIX - pausa quando tab oculta, FPS menor no mobile */
+/* MATRIX - pausa quando tab oculta, FPS menor no mobile.
+   No mobile já está display:none via CSS, então nem inicializa */
 const matrix = document.getElementById("matrix");
 let matrixTimer = null;
-if(matrix){
+if(matrix && !isMobileDevice){
   const mCtx = matrix.getContext("2d");
   function sizeCanvases(){
     matrix.width = window.innerWidth;
@@ -2403,10 +2417,9 @@ if(matrix){
       drops[i]++;
     });
   }
-  const matrixFps = isMobileDevice ? 12 : 20;
   function startMatrix(){
     if(matrixTimer) return;
-    matrixTimer = setInterval(drawMatrix, 1000/matrixFps);
+    matrixTimer = setInterval(drawMatrix, 50);
   }
   function stopMatrix(){
     if(matrixTimer){ clearInterval(matrixTimer); matrixTimer = null; }
@@ -2418,13 +2431,15 @@ if(matrix){
   });
 }
 
-/* WEBGL - pixelRatio menor no mobile, pausa quando oculto */
+/* WEBGL - no mobile está display:none via CSS, então nem inicializa.
+   No desktop roda normal, pausa quando oculto */
 (function(){
   if(!window.THREE) return;
+  if(isMobileDevice) return;
   try {
     const canvas = document.getElementById("webgl-bg");
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: !isMobileDevice, alpha: true, powerPreference: 'low-power' });
-    renderer.setPixelRatio(isMobileDevice ? 1 : Math.min(window.devicePixelRatio, 1.5));
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'low-power' });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(-1,1,1,-1,0,1);
     const mat = new THREE.ShaderMaterial({
@@ -2435,7 +2450,7 @@ if(matrix){
         float hash(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
         float noise(vec2 p){ vec2 i=floor(p), f=fract(p); f=f*f*(3.0-2.0*f);
           return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y); }
-        float fbm(vec2 p){ float v=0.0,a=0.5; for(int i=0;i<4;i++){ v+=a*noise(p); p=p*2.02+vec2(1.7,9.2); a*=0.5; } return v; }
+        float fbm(vec2 p){ float v=0.0,a=0.5; for(int i=0;i<5;i++){ v+=a*noise(p); p=p*2.02+vec2(1.7,9.2); a*=0.5; } return v; }
         void main(){
           vec2 p=(vUv-0.5)*vec2(uRes.x/uRes.y,1.0);
           vec3 col=vec3(0.08,0.05,0.16);
@@ -2648,7 +2663,7 @@ function createConfetti(){
   c.className = 'confetti-container';
   document.body.appendChild(c);
   const colors = ['#ff7eb6','#7dd3fc','#fbbf24','#4ade80','#fb7185','#c084fc'];
-  const count = isMobileDevice ? 50 : 90;
+  const count = isMobileDevice ? 40 : 90;
   for(let i=0;i<count;i++){
     const el = document.createElement('div');
     el.className = 'confetti';
@@ -2670,7 +2685,7 @@ window.addEventListener('load',()=>{
     if(gr) gr.textContent = formatTime(parseInt(rec));
   }
 });
-console.log('✅ Site Clay+Glass carregado! (otimizado mobile)');
+console.log('✅ Site carregado (mobile scroll otimizado)');
 </script>
 </body>
 </html>
