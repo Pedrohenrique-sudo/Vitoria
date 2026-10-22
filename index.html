@@ -24,14 +24,26 @@
   --radius-sm:20px;
   --blur-strong:blur(28px) saturate(180%);
 }
+
+/* 🔥 FIX #1: html com fundo SÓLIDO escuro — nunca mais branco por baixo */
+html{
+  background-color:#0a0620;
+  color-scheme: dark;
+  -webkit-tap-highlight-color: transparent;
+}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{
-  background:
+
+/* 🔥 FIX #2: body com fundo sólido + gradiente por cima (fallback sempre escuro) */
+body{
+  background-color:#0a0620;
+  background-image:
     radial-gradient(circle at 15% 10%, rgba(192,132,252,0.28) 0%, transparent 45%),
     radial-gradient(circle at 85% 90%, rgba(255,126,182,0.25) 0%, transparent 45%),
     radial-gradient(circle at 50% 50%, rgba(125,211,252,0.08) 0%, transparent 60%),
     linear-gradient(180deg, #0a0620 0%, #140a35 50%, #0a0620 100%);
-  background-attachment: fixed;
+  background-attachment: scroll; /* 🚫 fixed travava no mobile */
+  background-repeat: no-repeat;
+  background-size: cover;
   color:var(--text);
   font-family: Inter, system-ui, sans-serif;
   scroll-behavior:smooth;
@@ -40,6 +52,9 @@ html,body{
   -webkit-font-smoothing:antialiased;
   -webkit-text-size-adjust:100%;
   text-size-adjust:100%;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
 }
 ::-webkit-scrollbar{width:10px}
 ::-webkit-scrollbar-track{background:#0a0620}
@@ -230,10 +245,16 @@ html,body{
   100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0)}
 }
 
-#main-wrapper{opacity:0;transition:opacity 2.2s ease}
-#main-wrapper.revealed{opacity:1}
-#webgl-bg,#matrix{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;opacity:0;transition:opacity 2s ease}
+/* 🔥 FIX #3: canvases com fundo escuro sólido — não fica "buraco branco" se sumirem */
+#webgl-bg,#matrix{
+  position:fixed;inset:0;width:100%;height:100%;pointer-events:none;
+  opacity:0;transition:opacity 2s ease;
+  background-color:#0a0620;
+}
 #webgl-bg.revealed,#matrix.revealed{opacity:1}
+
+#main-wrapper{opacity:0;transition:opacity 2.2s ease;background-color:transparent}
+#main-wrapper.revealed{opacity:1}
 .hearts-container{position:fixed;inset:0;pointer-events:none;z-index:2;overflow:hidden;opacity:0;transition:opacity 2s ease}
 .hearts-container.revealed{opacity:1}
 .float-heart{position:absolute;opacity:0;animation:floatHeart linear infinite;will-change:transform}
@@ -570,7 +591,8 @@ section{
   transition: transform 0.6s cubic-bezier(.16,1,.3,1), box-shadow 0.6s ease, opacity 0.8s ease;
   opacity:0;transform:translateY(60px) scale(0.95);
   max-width:100%;
-  contain: layout paint;
+  /* 🔥 FIX #4: contain: layout paint criava buracos brancos no Android */
+  /* Removido */
 }
 section::before{
   content:"";position:absolute;
@@ -1442,19 +1464,9 @@ footer span{
 
 /* ============================
    🔥 OTIMIZAÇÃO MOBILE DE SCROLL
-   O SEGREDO: matar backdrop-filter e background-fixed
 ============================ */
 @media(max-width:900px){
-  /* 🔥 #1 CAUSA DO TRAVAMENTO: background-attachment fixed
-     no mobile força repaint do gradiente inteiro a cada frame de scroll */
-  html,body{
-    background-attachment: scroll !important;
-  }
-
-  /* 🔥 #2 CAUSA: backdrop-filter em elementos FIXOS/STICKY
-     (.top-nav, .system-nav, .hero-card, .status-header etc.)
-     Ao rolar, o navegador recalcula o blur do conteúdo por baixo
-     a cada frame — isso é o que trava TUDO */
+  /* 🔥 CAUSA DO TRAVAMENTO: backdrop-filter em FIXED/STICKY */
   .top-nav,
   .system-nav,
   .nav-links a,
@@ -1473,7 +1485,6 @@ footer span{
     -webkit-backdrop-filter: none !important;
   }
 
-  /* Compensar o "vidro" perdido com fundo mais sólido (mesma cor, mais opaco) */
   .top-nav{
     background: linear-gradient(145deg, rgba(58,43,122,0.92), rgba(20,10,53,0.92)) !important;
   }
@@ -1519,8 +1530,6 @@ footer span{
     background: rgba(15,10,38,0.94) !important;
   }
 
-  /* 🔥 #3 CAUSA: backdrop-filter em <section> — mesmo "contain: layout paint"
-     não ajuda porque o fundo do body muda durante scroll e o blur recalcula */
   section{
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
@@ -1528,7 +1537,6 @@ footer span{
   }
   section:hover{transform:none !important}
 
-  /* 🔥 #4: elementos internos com backdrop-filter */
   h2,
   .stat-card,
   .id-card,
@@ -1555,7 +1563,6 @@ footer span{
     -webkit-backdrop-filter: none !important;
   }
 
-  /* Compensar com fundos sólidos (mantendo a paleta) */
   .stat-card{
     background: linear-gradient(145deg, rgba(58,43,122,0.85), rgba(36,26,82,0.8)) !important;
   }
@@ -1620,7 +1627,7 @@ footer span{
     background: linear-gradient(145deg, rgba(58,43,122,0.85), rgba(36,26,82,0.8)) !important;
   }
 
-  /* 🔥 #5: parar animações infinitas que repintam durante scroll */
+  /* Parar animações infinitas que repintam durante scroll */
   #scroll-progress{animation:none !important;background:linear-gradient(90deg,#ff7eb6,#c084fc) !important}
   #sync-bar{animation:none !important;background:linear-gradient(90deg,#ff7eb6,#c084fc,#7dd3fc) !important}
   .hero h1{animation:none !important}
@@ -1633,13 +1640,25 @@ footer span{
   .hearts-container.revealed .float-heart{opacity:0.2 !important}
   .game-victory.show{animation:none !important}
 
-  /* 🔥 #6: desativar canvas de fundo animado no mobile
-     (WebGL + matrix = 2 loops de render contínuos que disputam
-     a GPU com o scroll) */
+  /* 🔥 DESATIVAR canvases animados no mobile (não rolam 100%) */
   #webgl-bg,#matrix{display:none !important}
 
-  /* 🔥 #7: acelerar compositing dos poucos elementos que ainda animam */
-  .float-heart{transform:translateZ(0)}
+  /* 🔥 FIX CRÍTICO: sections ficam visíveis SEMPRE no mobile
+     (sem opacity:0 + translateY inicial → não tem "flash" branco
+     enquanto o JS de reveal não dispara) */
+  section{
+    opacity:1 !important;
+    transform:none !important;
+    transition:none !important;
+  }
+  .timeline-item{
+    opacity:1 !important;
+    transform:none !important;
+  }
+  .hero{
+    opacity:1 !important;
+    transform:none !important;
+  }
 }
 
 /* Ajustes finos mobile */
@@ -2175,7 +2194,6 @@ window.addEventListener('scroll',()=>{
   },100);
 },{passive:true});
 
-// Só roda o parallax em dispositivos com mouse fino (desktop)
 if(!isMobileDevice){
   document.addEventListener('mousemove',(e)=>{
     const heroCard = document.getElementById('hero-card');
@@ -2393,8 +2411,6 @@ if(heartsContainer){
 const avatar = document.querySelector(".profile-avatar");
 if(avatar) avatar.addEventListener("click",()=>createToast("RANK: NAMORADA_PERFEITA ✓"));
 
-/* MATRIX - pausa quando tab oculta, FPS menor no mobile.
-   No mobile já está display:none via CSS, então nem inicializa */
 const matrix = document.getElementById("matrix");
 let matrixTimer = null;
 if(matrix && !isMobileDevice){
@@ -2431,8 +2447,6 @@ if(matrix && !isMobileDevice){
   });
 }
 
-/* WEBGL - no mobile está display:none via CSS, então nem inicializa.
-   No desktop roda normal, pausa quando oculto */
 (function(){
   if(!window.THREE) return;
   if(isMobileDevice) return;
@@ -2685,7 +2699,7 @@ window.addEventListener('load',()=>{
     if(gr) gr.textContent = formatTime(parseInt(rec));
   }
 });
-console.log('✅ Site carregado (mobile scroll otimizado)');
+console.log('✅ Site carregado (scroll suave mobile)');
 </script>
 </body>
 </html>
