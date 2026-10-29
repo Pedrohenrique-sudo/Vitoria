@@ -19,13 +19,13 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:3;bac
 button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation;background:none;border:0;appearance:none;-webkit-appearance:none}
 :focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
 .orb{font-family:Orbitron,sans-serif}
-
+ 
 /* GLASS */
 .glass{position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.03));border:1px solid var(--edge);-webkit-backdrop-filter:blur(20px) saturate(170%);backdrop-filter:blur(20px) saturate(170%);box-shadow:0 20px 55px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(255,255,255,.05)}
 .glass::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:0;transition:opacity .4s;background:radial-gradient(280px circle at var(--mx,50%) var(--my,0),rgba(255,255,255,.2),transparent 65%)}
 .glass:hover::before{opacity:1}
 @supports not (backdrop-filter:blur(1px)){.glass{background:rgba(17,24,39,.9)}}
-
+ 
 /* INTRO VELA */
 #intro{position:fixed;inset:0;z-index:9999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;cursor:pointer;transition:opacity 1.6s ease,filter 1.6s ease,transform 1.6s var(--ease)}
 #intro.go{opacity:0;filter:blur(20px);transform:scale(1.5);pointer-events:none}
@@ -44,7 +44,7 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation;backg
 @keyframes pulseT{50%{opacity:.9}}
 .pt{position:fixed;border-radius:50%;pointer-events:none;z-index:10000;animation:pf 3s ease-out forwards;will-change:transform}
 @keyframes pf{to{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0)}}
-
+ 
 /* TRANSIÇÃO ÉPICA */
 @property --r{syntax:'<percentage>';inherits:false;initial-value:0%}
 #intro{--r:0%;transition:none;-webkit-mask-image:radial-gradient(circle at 50% 50%,transparent calc(var(--r) - 22%),#000 var(--r));mask-image:radial-gradient(circle at 50% 50%,transparent calc(var(--r) - 22%),#000 var(--r))}
@@ -83,10 +83,10 @@ body.on #webgl{opacity:1}body.on #matrix{opacity:.13}
 .fh{position:absolute;bottom:-10vh;opacity:0;animation:fh linear infinite;will-change:transform}
 @keyframes fh{0%{transform:translateY(0) rotate(0);opacity:0}12%{opacity:.18}88%{opacity:.1}100%{transform:translateY(-115vh) rotate(240deg);opacity:0}}
 #prog{position:fixed;top:0;left:0;height:3px;width:100%;transform:scaleX(0);transform-origin:left;background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent));z-index:999;box-shadow:0 0 20px rgba(244,114,182,.5)}
-
+ 
 #app{position:relative;z-index:5;opacity:0;transform:scale(1.05);transition:opacity 2.6s ease .3s,transform 3.2s var(--ease) .1s}
 body.on #app{opacity:1;transform:none}
-
+ 
 /* TOP NAV */
 .top{position:fixed;top:0;left:0;right:0;z-index:50;padding:10px 12px;transition:background .4s,box-shadow .4s}
 .top.s{background:rgba(7,11,20,.55);-webkit-backdrop-filter:blur(18px) saturate(160%);backdrop-filter:blur(18px) saturate(160%);border-bottom:1px solid rgba(125,211,252,.25);box-shadow:0 12px 30px rgba(0,0,0,.35)}
@@ -95,7 +95,7 @@ body.on #app{opacity:1;transform:none}
 .links{display:flex;gap:6px;flex-wrap:wrap}
 .links a{text-decoration:none;color:var(--muted);font-size:.72rem;padding:5px 12px;border-radius:99px;border:1px solid rgba(125,211,252,.3);background:rgba(15,23,42,.35);transition:.3s var(--ease)}
 .links a:hover{color:#fff;border-color:var(--accent);transform:translateY(-2px)}
-
+ 
 /* HERO */
 .hero{min-height:64vh;position:relative;display:grid;place-items:center;padding:84px 14px 36px}
 .hv{position:absolute;inset:0;overflow:hidden;z-index:-1;opacity:.3;-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)}
@@ -110,7 +110,7 @@ body.on #app{opacity:1;transform:none}
 .sub{text-align:center;margin-top:12px;color:#dbeafe;font-size:.9rem}
 .sc{position:absolute;bottom:14px;left:50%;font-size:1.5rem;color:rgba(255,255,255,.5);cursor:pointer;animation:bd 2s infinite}
 @keyframes bd{0%,100%{transform:translate(-50%,0);opacity:.3}50%{transform:translate(-50%,8px);opacity:.9}}
-
+ 
 /* TABS */
 .main{max-width:1000px;margin:0 auto;padding:6px 12px 50px}
 .sn{position:sticky;top:64px;z-index:30;display:flex;margin:0 auto 16px;width:fit-content;max-width:100%;padding:5px;border-radius:99px;overflow-x:auto;scrollbar-width:none}
@@ -178,7 +178,7 @@ h2::before{content:"◆";color:var(--accent);font-size:.7rem}
 .fl span{position:absolute;inset:0;display:grid;place-content:center;text-align:center;padding:6px;border-radius:12px;font-size:.8rem;border:1px solid rgba(244,114,182,.35);background:rgba(15,23,42,.55);backface-visibility:hidden;-webkit-backface-visibility:hidden;cursor:pointer}
 .fl span:last-child{transform:rotateY(180deg);color:#fbcfe8;background:rgba(244,114,182,.18)}
 .fl em{font-style:normal;font-size:1.2rem}
-
+ 
 /* JOGO */
 .gm{display:grid;gap:12px;justify-items:center}
 .chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
@@ -199,7 +199,7 @@ h2::before{content:"◆";color:var(--accent);font-size:.7rem}
 #win{display:none;text-align:center;padding:12px;border-radius:14px;border:2px solid rgba(52,211,153,.4);background:rgba(52,211,153,.1);width:100%;max-width:320px}
 #win.on{display:block;animation:rise .6s var(--ease)}
 #win h3{font:700 .85rem Orbitron;color:var(--ok)}
-
+ 
 /* GALERIA */
 .gal{display:grid;gap:10px;grid-template-columns:repeat(2,1fr)}
 @media(min-width:620px){.gal{grid-template-columns:repeat(3,1fr)}}@media(min-width:900px){.gal{grid-template-columns:repeat(4,1fr)}}
@@ -240,20 +240,20 @@ footer{text-align:center;font-size:.75rem;color:#94a3b8;padding:20px 10px 40px}
   <div id="ititle"><h1>PEDRO &amp; VITÓRIA</h1><p>desde 18 · 03 · 2025</p></div>
 </div>
 <canvas id="ic"></canvas>
-
+ 
 <canvas id="webgl"></canvas><div class="aur"><i></i><i></i><i></i></div><canvas id="matrix"></canvas>
 <div class="hearts" id="hearts"></div>
 <div id="prog"></div>
 <div id="toast" aria-live="polite"></div>
 <div id="robot"><span id="re">🤖</span><div id="rb"></div></div>
 <div id="lb"><img alt=""></div>
-
+ 
 <div id="app">
   <header class="top" id="top"><div class="top-in">
     <div class="brand">SYSTEM_ROOT // PEDRO &amp; VITÓRIA</div>
     <nav class="links"><a href="#" data-t="core">Sistema</a><a href="#" data-t="mom">Momentos</a><a href="#" data-t="game">🎮 Jogo</a><a href="#" data-t="gal">📸 Fotos</a></nav>
   </div></header>
-
+ 
   <div class="hero" id="hero">
     <div class="hv"><video autoplay muted loop playsinline preload="none"><source src="https://cdn.coverr.co/videos/coverr-stars-in-the-night-sky-1579/1080p.mp4" type="video/mp4"></video></div>
     <div class="hc glass" id="hc">
@@ -263,12 +263,12 @@ footer{text-align:center;font-size:.75rem;color:#94a3b8;padding:20px 10px 40px}
     </div>
     <div class="sc" id="sc">⌄</div>
   </div>
-
+ 
   <main class="main" id="main">
     <nav class="sn glass" id="sn"><i class="pill" id="pill"></i>
       <button class="nb on" data-t="core">SISTEMA</button><button class="nb" data-t="mom">MOMENTOS</button><button class="nb" data-t="game">🎮 JOGO</button><button class="nb" data-t="gal">📸 FOTOS</button>
     </nav>
-
+ 
     <div id="core" class="tc on"><div class="grid">
       <section class="glass" style="--i:0"><h2>TEMPO</h2><div class="sg"><div class="sc2"><b id="d">00</b><span>DIAS</span></div><div class="sc2"><b id="h">00</b><span>HORAS</span></div><div class="sc2"><b id="m">00</b><span>MIN</span></div><div class="sc2"><b id="s">00</b><span>SEG</span></div></div></section>
       <section class="glass" style="--i:1"><h2>IDENTIFICAÇÃO</h2><div class="idc"><img class="av" id="av" src="foto_vitoria.jpg" alt="Maria Vitória" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23f472b6%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%22 y=%2265%22 text-anchor=%22middle%22 font-size=%2240%22%3E❤️%3C/text%3E%3C/svg%3E'"><div><p class="orb" style="font-size:.85rem">MARIA VITÓRIA</p><p style="font-size:.7rem;color:#94a3b8">RANK: NAMORADA_PERFEITA</p></div></div></section>
@@ -283,7 +283,7 @@ footer{text-align:center;font-size:.75rem;color:#94a3b8;padding:20px 10px 40px}
       <section class="glass" style="--i:8"><h2>DECRYPT</h2><p id="hint">[ CLIQUE ]</p><div id="tt" tabindex="0" role="button">!@#$%&amp;*()_RESTRITO_!@#$%&amp;*()_</div></section>
       <section class="glass full" style="--i:9"><h2>NETWORK</h2><a class="insta" href="https://www.instagram.com/eavidamavi?igsh=OW50NTY3eXhsOWQ3" target="_blank" rel="noopener">🔗 @VITÓRIA</a></section>
     </div></div>
-
+ 
     <div id="mom" class="tc"><div class="grid">
       <section class="glass full" style="--i:0"><h2>LINHA DO TEMPO</h2><div class="tl">
         <div><small>18.03.2025</small><b>Início</b><p>Conexão estabelecida.</p></div>
@@ -294,7 +294,7 @@ footer{text-align:center;font-size:.75rem;color:#94a3b8;padding:20px 10px 40px}
       <section class="glass" style="--i:1"><h2>FRASES</h2><div class="qb"><p id="q">"Você é o meu sempre."</p><div class="qn"><button class="btn" id="qp" aria-label="Anterior">←</button><button class="btn" id="qx" aria-label="Próxima">→</button></div></div></section>
       <section class="glass" style="--i:2"><h2>POR QUE TE AMO</h2><p style="font-size:.75rem;color:#94a3b8;margin-bottom:8px">Clique nos cards.</p><div class="rg" id="rg"></div></section>
     </div></div>
-
+ 
     <div id="game" class="tc"><section class="glass"><h2>🧩 DECRYPT_IMAGE</h2>
       <p style="font-size:.78rem;color:#94a3b8;margin-bottom:10px">👆 Escolha uma foto na galeria!</p>
       <div class="gm">
@@ -305,12 +305,12 @@ footer{text-align:center;font-size:.75rem;color:#94a3b8;padding:20px 10px 40px}
         <div class="chips"><button class="chip" id="bs">🔄 Embaralhar</button><button class="chip" id="bz">🔄 Resetar</button></div>
         <div id="win"><h3>🎉 IMAGEM_MONTADA!</h3><p style="font-size:.8rem;color:#fbcfe8">💜 Você completou!</p><p style="font-size:.72rem;color:#94a3b8">Tempo: <span id="vt">00:00</span> • Movimentos: <span id="vm">0</span></p><p style="font-size:.75rem;color:#fbcfe8">"Foto montada!" ✨</p></div>
       </div></section></div>
-
+ 
     <div id="gal" class="tc"><section class="glass"><h2>📸 GALLERY</h2><p style="font-size:.75rem;color:#94a3b8;margin-bottom:10px">Toque numa foto para ampliar ou em "🧩 Jogar" para usar no quebra-cabeça</p><div class="gal" id="gg"></div></section></div>
   </main>
   <footer>PEDRO FERREIRA // 2026 - Feito com ♡ para Vitória</footer>
 </div>
-
+ 
 <script>
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)],pad=n=>String(n).padStart(2,'0');
 const PH=['foto_vitoria.jpg','foto_1.jpg','foto_2.jpg','foto_3.jpg','foto_4.jpg','foto_5.jpg','foto_6.jpg','foto_7.jpg','foto_8.jpg','foto_9.jpg','foto_10.jpg','foto_linda.jpg','foto_maria.jpg','foto_mor.jpg'];
@@ -319,10 +319,10 @@ const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
 let ac;const beep=(f,d=.05)=>{if(!ac)return;try{const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;g.gain.value=.03;g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+d);o.connect(g).connect(ac.destination);o.start();o.stop(ac.currentTime+d)}catch(e){}};
 function toast(t){const e=document.createElement('div');e.className='toast';e.textContent=t;$('#toast').append(e);setTimeout(()=>e.remove(),3000)}
 let rt;function robot(t){const b=$('#rb');b.textContent=t;b.classList.add('on');clearTimeout(rt);rt=setTimeout(()=>b.classList.remove('on'),3500)}
-
+ 
 /* brilho glass no ponteiro (delegado + rAF) */
 let pe=null,pf=0;addEventListener('pointermove',e=>{pe=e;if(!pf)pf=requestAnimationFrame(()=>{pf=0;const g=pe.target.closest&&pe.target.closest('.glass');if(g){const r=g.getBoundingClientRect();g.style.setProperty('--mx',pe.clientX-r.left+'px');g.style.setProperty('--my',pe.clientY-r.top+'px')}})},{passive:true});
-
+ 
 /* intro: sequência cinematográfica */
 const ic=$('#ic'),ix=ic.getContext('2d');let ip=[],irun=false,ilast=0,ispawn=null;
 function ifit(){const d=Math.min(devicePixelRatio||1,2);ic.width=innerWidth*d;ic.height=innerHeight*d;ix.setTransform(d,0,0,d,0,0)}ifit();addEventListener('resize',ifit);
@@ -360,7 +360,7 @@ if(window.CSS&&CSS.registerProperty)i.classList.add('open');else i.classList.add
 let n=0;ispawn=setInterval(()=>{rain(2);if(++n>22){clearInterval(ispawn);ispawn=null}},170);istart()});
 wait(10800,finish)}
 $('#intro').onclick=reveal;$('#intro').onkeydown=e=>{if(e.key==='Enter'||e.key===' ')reveal()};
-
+ 
 /* abas */
 const nbs=$$('.nb');
 function setPill(){const b=nbs.find(x=>x.classList.contains('on')),p=$('#pill');p.style.width=b.offsetWidth+'px';p.style.transform=`translateX(${b.offsetLeft}px)`;const n=$('#sn');n.scrollTo({left:b.offsetLeft-n.clientWidth/2+b.offsetWidth/2,behavior:'smooth'})}
@@ -370,10 +370,10 @@ scrollTo({top:$('#main').offsetTop-70,behavior:'smooth'});if(id==='mom')tlObs();
 document.addEventListener('click',e=>{const a=e.target.closest('[data-t]');if(a){e.preventDefault();go(a.dataset.t)}});
 $('#sc').onclick=()=>$('#main').scrollIntoView({behavior:'smooth'});
 addEventListener('resize',()=>{setPill();fit()});document.fonts&&document.fonts.ready.then(setPill);
-
+ 
 /* scroll: barra + nav + parallax (1 rAF) */
 let sf=0;addEventListener('scroll',()=>{if(sf)return;sf=requestAnimationFrame(()=>{sf=0;const y=scrollY,m=document.documentElement.scrollHeight-innerHeight;$('#prog').style.transform=`scaleX(${m>0?y/m:0})`;$('#top').classList.toggle('s',y>20);if(y<innerHeight)$('#hc').style.transform=`translateY(${y*.12}px)`})},{passive:true});
-
+ 
 /* relógios */
 const t0=new Date('2025-03-18T00:00:00'),t2=new Date('2027-03-18T00:00:00');
 const sv=(id,v)=>{const e=document.getElementById(id);if(e&&e.textContent!==String(v))e.textContent=v};let done2=false;
@@ -382,28 +382,28 @@ x=t2-n;if(x<=0){if(!done2){done2=true;$('#cdw').innerHTML='<div class="okt">♡ 
 sv('ping','Ping: '+(1+Math.floor(Math.random()*3))+'ms')}
 tick();setInterval(tick,1000);
 let ph=0;setInterval(()=>{if(document.hidden)return;const v=Math.round(98+Math.sin(ph+=.08)*1.3);sv('sv',v+'%');$('#sb').style.width=v+'%'},250);
-
+ 
 /* terminal */
 (()=>{const o=$('#to'),m="> Sistema online. Digite 'love'.";let i=0;const id=setInterval(()=>{o.textContent=m.slice(0,++i);if(i>=m.length)clearInterval(id)},30)})();
 const cmds={love:'Comandos: amor, vitoria, data, jogo, fotos.',amor:'Sincronia infinita.',vitoria:'Dona do sistema.',data:'18/03/2025',jogo:'Acesse a aba JOGO!',fotos:'Acesse a aba FOTOS!'};
 $('#ti').addEventListener('keydown',e=>{if(e.key!=='Enter')return;const v=e.target.value.toLowerCase().trim(),o=$('#to'),p=document.createElement('p'),r=document.createElement('div');p.textContent='> '+v;r.style.color='#86efac';r.textContent=cmds[v]||'Comando desconhecido.';o.append(p,r);o.scrollTop=o.scrollHeight;e.target.value='';beep(460)});
 $('#scan').onclick=()=>{const o=$('#no');o.textContent='';['Scanning...','Memory: 100% Secure','Port 1314/Love: OPEN','Service: Eternal','Result: Found'].forEach((l,i)=>setTimeout(()=>{const p=document.createElement('p');p.textContent='> '+l;o.append(p);o.scrollTop=o.scrollHeight;beep(710)},i*450))};
-
+ 
 /* decrypt */
 const LOVE=`Escrever para você é como tentar descrever o infinito. Sabe, às vezes eu me pego pensando em como era a minha vida antes de você, e sinceramente? Parece que eu estava apenas existindo, esperando por um momento que eu nem sabia que chegaria. Você não entrou na minha vida apenas para ser mais uma pessoa; você entrou para ser o eixo de tudo, a luz que ilumina os meus dias mais escuros e o sorriso que me faz esquecer qualquer problema.
-
+ 
 O que eu sinto por você vai muito além da pele, muito além da rotina. É algo que vibra na alma. Eu amo a forma como você me olha e me faz sentir o homem mais importante do mundo. Amo o som da sua risada, que para mim é a melodia mais bonita que já existiu. Amo até os nossos silêncios, porque até neles a gente se entende. Você é a minha maior conquista, o meu porto seguro e a pessoa que eu escolho todos os dias, sem hesitar nem por um segundo.
-
+ 
 Eu quero que você saiba que, não importa o que o futuro nos reserve, eu estarei aqui. Quero estar ao seu lado para comemorar as suas vitórias, para segurar sua mão nas suas dificuldades e para construir cada pedacinho dos nossos sonhos. Eu sonho com o nosso futuro, com a nossa casa, com a nossa rotina e com o passar dos anos ao seu lado. Quero envelhecer ouvindo as suas histórias e redescobrindo o motivo de ter me apaixonado por você lá no começo.
-
+ 
 Obrigado por ter paciência comigo, por me ensinar tanto sobre a vida e por me mostrar o verdadeiro significado da palavra 'amor'. Você é inteligente, linda, forte e tem um coração que não cabe no peito. Nunca duvide do valor que você tem e do brilho que você carrega. Para o mundo você pode ser apenas uma pessoa, mas para mim, você é o mundo inteiro.
-
+ 
 Neste sistema que eu criei, cada linha de código representa um pensamento meu em você. E assim como esse código, meu amor por você é algo que pretendo manter rodando para sempre, sem erros, sem falhas, apenas com a atualização constante de um carinho que só cresce.
-
+ 
 Eu te amo com cada fibra do meu ser, com cada batida do meu coração. Hoje, amanhã e até depois do fim.`;
 let dr=false;function decrypt(){if(dr)return;dr=true;$('#hint').style.display='none';const el=$('#tt'),M='!@#$%&*';let n=0;(function f(){let s='';for(let i=0;i<LOVE.length;i++){const c=LOVE[i];s+=i<n||c==='\n'||c===' '?c:M[Math.random()*7|0]}el.textContent=s;n+=5;if(n<LOVE.length+5)requestAnimationFrame(f);else el.textContent=LOVE})()}
 $('#tt').onclick=decrypt;$('#tt').onkeydown=e=>{if(e.key==='Enter')decrypt()};
-
+ 
 /* frases / motivos / timeline */
 const Q=['"Você é o meu sempre."','"Com você, cada dia é especial."','"Te amo não só pelo que você é."','"Você é a resposta para tudo."','"Meu porto seguro: Vitória."','"A melhor decisão foi te escolher."'];let qi=0;
 function showQ(i){const e=$('#q');qi=(i+Q.length)%Q.length;e.classList.add('out');setTimeout(()=>{e.textContent=Q[qi];e.classList.remove('out')},220);beep(520,.03)}
@@ -412,7 +412,7 @@ setInterval(()=>{if($('#mom').classList.contains('on')&&!document.hidden)showQ(q
 [['✨','Seu sorriso','Ilumina meu dia.'],['💪','Sua força','Me inspira.'],['🧠','Sua inteligência','Me surpreende.'],['❤️','Seu coração','É meu lar.'],['🌙','Nossos silêncios','A gente se entende.'],['🎯','Nossos sonhos','Vamos construir.']].forEach(([e,t,d])=>{const f=document.createElement('div');f.className='fl';f.innerHTML=`<div><span><em>${e}</em>${t}</span><span>${d}</span></div>`;f.onclick=()=>{f.classList.toggle('f');beep(640,.04)};$('#rg').append(f)});
 let tob=null;function tlObs(){if(!tob)tob=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');tob.unobserve(x.target)}}),{threshold:.25});$$('.tl>div:not(.in)').forEach((d,i)=>{d.style.transitionDelay=i*90+'ms';tob.observe(d)})}
 $$('.sc2').forEach(c=>c.onclick=()=>beep(560,.03));$$('.ac').forEach(c=>c.onclick=()=>toast('Conquista verificada.'));$('#av').onclick=()=>toast('RANK: NAMORADA_PERFEITA ✓');
-
+ 
 /* galeria */
 const lb=$('#lb'),lbi=$('img',lb);
 const photos=[];
@@ -423,7 +423,7 @@ d.onclick=e=>{if(e.target.closest('button'))return playWith(src);if(rec.ok){lbi.
 $('#gg').append(d)}
 PH.forEach(p=>addPhoto(p,p));
 lb.onclick=()=>lb.classList.remove('on');addEventListener('keydown',e=>{if(e.key==='Escape')lb.classList.remove('on')});
-
+ 
 /* quebra-cabeça: tiles com transform */
 let N=3,photo=null,pos=[],moves=0,secs=0,tm=null,done=false;const pz=$('#pz'),fmt=s=>pad(Math.floor(s/60))+':'+pad(s%60),stat=(id,v)=>{$('#'+id).firstChild.nodeValue=v};
 function build(){clearInterval(tm);tm=null;pz.classList.remove('win');pz.innerHTML='';const im=new Image();im.onload=()=>fill(true);im.onerror=()=>fill(false);im.src=photo}
@@ -448,10 +448,10 @@ $('#bp').onclick=()=>playWith('foto_vitoria.jpg');$('#br').onclick=()=>{const ok
 $('#bs').onclick=shuffle;$('#bz').onclick=()=>photo?build():toast('⚠️ Escolha uma foto primeiro!');
 $('#lv').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;N=+b.dataset.n;$$('#lv .chip').forEach(c=>c.classList.toggle('on',c===b));if(photo)build()};
 function init(){photo='foto_vitoria.jpg';build();const r=store.get('puzzle_record_3');if(r)stat('gr',fmt(+r));$('.hv video').play&&$('.hv video').play().catch(()=>{})}
-
+ 
 /* corações */
 const hc=$('#hearts');['❤️','💕','💗','♥️','💖'].forEach((c,i)=>{for(let k=0;k<3;k++){const h=document.createElement('span');h.className='fh';h.textContent=c;h.style.cssText=`left:${Math.random()*100}%;font-size:${.8+Math.random()*.8}rem;animation-duration:${14+Math.random()*12}s;animation-delay:-${Math.random()*20}s`;hc.append(h)}});
-
+ 
 /* matrix (~25fps, pausa oculto) */
 const mx=$('#matrix'),mc=mx.getContext('2d');let drops=[],mlast=0;
 function fit(){mx.width=innerWidth;mx.height=innerHeight;drops=Array(Math.floor(innerWidth/16)).fill(1)}fit();
@@ -459,7 +459,7 @@ function matrix(t){requestAnimationFrame(matrix);if(document.hidden||!document.b
 mc.fillStyle='rgba(7,11,20,.08)';mc.fillRect(0,0,mx.width,mx.height);mc.fillStyle='#f472b6';mc.font='11px monospace';
 for(let i=0;i<drops.length;i++){mc.fillText('VITORIA01❤'[Math.random()*10|0],i*16,drops[i]*16);if(drops[i]*16>mx.height&&Math.random()>.96)drops[i]=0;drops[i]++}}
 if(!reduce)requestAnimationFrame(matrix);
-
+ 
 /* WebGL aurora (original, com pausa e DPR limitado) */
 addEventListener('load',()=>{if(!window.THREE)return;const cv=$('#webgl'),R=new THREE.WebGLRenderer({canvas:cv,antialias:false,alpha:true,powerPreference:'low-power'});R.setPixelRatio(Math.min(devicePixelRatio,1.25));
 const S=new THREE.Scene(),C=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
@@ -481,3 +481,4 @@ document.addEventListener('click',()=>{ac=ac||new(window.AudioContext||window.we
 </script>
 </body>
 </html>
+ 
